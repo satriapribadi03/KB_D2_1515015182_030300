@@ -1,0 +1,42 @@
+
+1. Pertama kali Visual Prolog akan mencari fakta atay head dari rule yang cocok dengan goal.
+   kemudian mencari pada clauses tersebut untuk mengunifikasi argumennya.
+   karena X variable bebas, maka x dapat diunifikasikan ke variable manapun.
+   Pembunuh juga merupakan variable bebas dari head rule pembunuh, maka terjadi unifikasi antara X dan Pembunuh,
+   sehingga X=Pembunuh.
+2. Goal yang cocok dengan head dari rule dan unifikasi membuat Visual Prolog melanjutkan pengujian pada bagian body dari rule.
+   untuk menguji body dari rule, maka akan dipanggil subgoal yang pertama dari body tersebut, yaitu orang(x,_,_,pencopet).
+   Perhatikan bahwa untuk mencari pembunuh siti kita tidak perlu mengetahui umur dan jender dari pembunuh tersebut. 
+   untuk itu variable anonim("_") muncul di posisi argumen orang.
+   prolog kemudian akan mencari kecocokan dari subgoal ini mulai dari bagian atas program hingga ke bagian bawah, maka pertama kali di temukan:
+   orang(Pembunuh,_, _,_).
+     |            |  | | 
+   orang(budi,    55,m,tukang_kayu).
+   mulai dari bagian atas hingga kebagian bawah, Sehingga variable pelaku akan diikat ke nilai budi. jika ditemukan ketidak cocokan rule dengan nilai budi.
+   maka akan fakta orang selanjutnya.
+
+3. visual prolog sekarang akan memulai pencarian untuk melakukan pencocokan rule yaitu terbunuh(Terbunuh).
+   ditemukan fakta yang cocok yaitu terbunuh(siti). maka variable Terbunuh akan diikat dengan siti.
+
+4. visual prolog akan ke subgoal selanjutnya yaitu dicurigai(Terbunuh). Selanjutnya akan melakukan pemanggil dicurigai(X).
+   karena pembunuh telah diikat dengan nilai budi, klausa cocok dengan subgoal yang memanggil, kemudian visual prolog akan mengikat variable X dengan budi.
+   selanjutnya visual prolog akan memanggil rule dicurigai pada bagian "dicurigai semua orang yang memiliki senjata yang kerjanya mirip dengan senjata penyebab siti terbunuh."
+   berikutnya visual prolog akan mencocokan isi rule tersebut.
+   - rule yang pertama yaitu terbunuh_dengan(siti,Senjata). visual prolog melakukan pencocokan dengan fakta diklausa.
+     dan ditemukan fakta yang cocok yaitu terbunuh_dengan(siti,pentungan), maka visual prolog akan mengikat variable Senjata dengan nilai pentungan.
+   - rule yang kedua yaitu cara_kerja _mirip(Benda,Senjata). karena variable Senjata sudah terikat dengan nilai pentungan, maka visual prolog akan hanya mencek cara_kerja_mirip yang variable Senjata memiliki nilai pentungan.
+     terdapat beberapa kemungkinan yaitu :
+     a. cara_kerja_mirip(kaki_palsu, pentungan).
+     b. cara_kerja_mirip(balok, pentungan).
+     c. cara_kerja_mirip(sepatu_bola, pentungan).
+   - rule yang ketiga yaitu kemungkinan_milik(X,Benda). kemudian melakukan pencocokan pada kemungkinan_milik   (X,sepatu_bola),kemungkinan_milik(X,gunting)Tetapi gagal.
+     lalu pencocokan pada kemungkinan_milik(X,Benda). karena variable X bernilai budi dan variable Benda bernilai pentungan maka visual prolog ke subgoal selanjutnya yaitu milik(X,Benda).
+     visual prolog melakukan pencocokan menemukan fakta yaitu milik(budi,kaki_palsu).
+   karena rule dicurigai sudah selesai maka visual prolog kembali ke rule pembunuh.
+
+5. subgoal selanjutnya yaitu ternodai(Pembunuh,Zat). visual prolog memulai pencarian untuk melakukan pencocokan pemanggilan ternodai.
+   karena variable Pembunuh telah diikat dengan nilai budi, dari fakta yang diklausa nilai budi yang menyatakan Zat adalah darah.
+   dari fakta yaitu ternodai(budi,darah).
+
+6. visual prolog akan melakukan pencocokan selanjutnya yaitu ternodai(Terbunuh,Zat). karena variable Pembunuh telah diikat dengan nilai budi dan variable Terbunuh telah diikat dengan nilai siti dan variable Zat bernilai darah,
+   maka pembunuhnya adalah budi ketika rule sukses dijalankan.
